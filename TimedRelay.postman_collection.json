@@ -1,0 +1,54 @@
+{
+	"info": {
+		"_postman_id": "d266a6e2-0d55-4965-a3c4-ea27171dd7f8",
+		"name": "TimedRelay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25131802"
+	},
+	"item": [
+		{
+			"name": "Get values",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/get-values",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"get-values"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set values",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/set-values?time=60&duration=45",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"set-values"
+					],
+					"query": [
+						{
+							"key": "time",
+							"value": "60"
+						},
+						{
+							"key": "duration",
+							"value": "45"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
