@@ -1,11 +1,21 @@
+#include <TimeLib.h>
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
 #include <ArduinoJson.h>
 #include "config.h"
 
+static const char ntpServerName[] = "us.pool.ntp.org";
+const int timeZone = -3;
+
+WiFiUDP Udp;
+unsigned int localPort = 8888;
+
 ESP8266WebServer server(80);
 
 int STATUS_LED = 2;
+int RELAY_PIN = 4;
 
 unsigned long lastLedTimestamp;
 bool isLedBlinking;
@@ -17,22 +27,86 @@ const int DURATION_ADDR = 1;
 const int MAX_TIME = 60 * 24;
 const int MAX_DURATION = 600;
 
+const int NTP_PACKET_SIZE = 48;
+byte packetBuffer[NTP_PACKET_SIZE];
+
+String currentHour = "-";
+uint16_t currentTime = 0;
+uint16_t currentDuration = 1;
+unsigned long turnOffTimestamp;
+bool hasStarted;
+bool isOnTime;
+
+time_t getNtpTime() {
+  IPAddress ntpServerIP;
+
+  while (Udp.parsePacket() > 0)
+    ;
+  WiFi.hostByName(ntpServerName, ntpServerIP);
+  sendNTPpacket(ntpServerIP);
+  uint32_t beginWait = millis();
+  while (millis() - beginWait < 1500) {
+    int size = Udp.parsePacket();
+    if (size >= NTP_PACKET_SIZE) {
+      Udp.read(packetBuffer, NTP_PACKET_SIZE);
+      unsigned long secsSince1900;
+      secsSince1900 = (unsigned long)packetBuffer[40] << 24;
+      secsSince1900 |= (unsigned long)packetBuffer[41] << 16;
+      secsSince1900 |= (unsigned long)packetBuffer[42] << 8;
+      secsSince1900 |= (unsigned long)packetBuffer[43];
+      return secsSince1900 - 2208988800UL + timeZone * SECS_PER_HOUR;
+    }
+  }
+  return 0;
+}
+
 void setup() {
+  Serial.begin(9600);
   pinMode(STATUS_LED, OUTPUT);
+  pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(STATUS_LED, HIGH);
+  digitalWrite(RELAY_PIN, HIGH);
 
   EEPROM.begin(512);
-  connectToWifi(SSID, PASSWORD, IP, GATEWAY, SUBNET, STATUS_LED);
+  connectToWifi(SSID, PASSWORD, STATUS_LED);
+  Udp.begin(localPort);
+  setSyncProvider(getNtpTime);
+  setSyncInterval(300);
+
+  currentTime = readFromEEPROM(TIME_ADDR);
+  currentDuration = readFromEEPROM(DURATION_ADDR);
 
   server.on("/", handleRoot);
   server.on("/set-values", handleSetValues);
   server.on("/get-values", handleGetValues);
+  server.on("/get-current-hour", handleGetCurrentHour);  
   server.onNotFound(handleNotFound);
 
   server.begin();
 }
 
 void loop() {
+  if (timeStatus() != timeNotSet) {
+    currentHour = hour() * 60 + minute();
+  }
+
+  if (millis() > turnOffTimestamp && hasStarted) {
+    digitalWrite(RELAY_PIN, HIGH);
+  }
+
+  if (isOnTime && !hasStarted) {
+    turnOffTimestamp = millis() + currentDuration * 1000;
+    digitalWrite(RELAY_PIN, LOW);
+    hasStarted = true;
+  }
+
+  if ((hour() == currentTime / 60) && (minute() == currentTime % 60)) {
+    isOnTime = true;
+  } else {
+    isOnTime = false;
+    hasStarted = false;
+  }
+
   if (isLedBlinking != true) {
     digitalWrite(STATUS_LED, (WiFi.status() == WL_CONNECTED) ? LOW : HIGH);
   }
@@ -44,18 +118,26 @@ void loop() {
   server.handleClient();
 }
 
-void connectToWifi(String ssid, String password, String ip, String gateway, String subnet, int ledPin) {
-  IPAddress _ip;
-  _ip.fromString(ip);
-  IPAddress _gateway;
-  _gateway.fromString(gateway);
-  IPAddress _subnet;
-  _subnet.fromString(subnet);
+void sendNTPpacket(IPAddress &address) {
+  memset(packetBuffer, 0, NTP_PACKET_SIZE);
+  packetBuffer[0] = 0b11100011;
+  packetBuffer[1] = 0;
+  packetBuffer[2] = 6;
+  packetBuffer[3] = 0xEC;
+  packetBuffer[12] = 49;
+  packetBuffer[13] = 0x4E;
+  packetBuffer[14] = 49;
+  packetBuffer[15] = 52;
+  Udp.beginPacket(address, 123);
+  Udp.write(packetBuffer, NTP_PACKET_SIZE);
+  Udp.endPacket();
+}
 
+void connectToWifi(String ssid, String password, int ledPin) {
   Serial.print("Connecting to ");
   Serial.println(String(ssid));
   WiFi.mode(WIFI_STA);
-  WiFi.config(_ip, _gateway, _subnet);
+  //WiFi.config(_ip, _gateway, _subnet);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -111,6 +193,8 @@ void handleSetValues() {
 
   writeToEEPROM(TIME_ADDR, newTime);
   writeToEEPROM(DURATION_ADDR, newDuration);
+  currentTime = newTime;
+  currentDuration = newDuration;
 
   server.send(200);
   blinkStatusLed();
@@ -125,6 +209,17 @@ void handleGetValues() {
 
   doc["time"] = time;
   doc["duration"] = duration;
+  serializeJson(doc, response);
+
+  server.send(200, "application/json", response);
+  blinkStatusLed();
+}
+
+void handleGetCurrentHour() {
+  String response;
+  StaticJsonDocument<128> doc;
+
+  doc["currentHour"] = currentHour;
   serializeJson(doc, response);
 
   server.send(200, "application/json", response);
@@ -206,18 +301,19 @@ void handleRoot() {
             La duración máxima permitida es de 600 segundos.
           </p>
           <form onsubmit="setValues(event)">
-            <label>Hora:</label>
+            <label>Hora de riego:</label>
             <input type="time" id="time" required /><br />
             <label>Duración:</label>
             <input type="number" id="duration" min="1" max="600" required /><br />
             <button type="submit">Guardar</button>
           </form>
           <h3>Configuración actual</h3>
-          <p><b>Hora:</b> <span id="savedTime">-</span></p>
+          <p><b>Hora de riego:</b> <span id="savedTime">-</span></p>
           <p>
             <b>Duración:</b>
             <span id="savedDuration">-</span>
           </p>
+          <p><b>Hora del sistema:</b> <span id="currentHour">-</span></p>
         </div>
 
         <script>
@@ -280,6 +376,31 @@ void handleRoot() {
               });
           }
 
+          function getCurrentHour() {
+            fetch("/get-current-hour")
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("No fue posible obtener la hora del sistema");
+                } else {
+                  return response.json();
+                }
+              })
+              .then((data) => {
+                const hours = Math.floor(data.currentHour / 60);
+                const minutes = data.currentHour % 60;
+                const time =
+                  String(hours).padStart(2, "0") +
+                  ":" +
+                  String(minutes).padStart(2, "0");
+
+                document.getElementById("currentHour").innerText = time ?? "00:00";
+              })
+              .catch((error) => {
+                alert(error.message);
+              });
+          }
+
+          setInterval(getCurrentHour, 1000);
           window.onload = () => getValues(true);
         </script>
       </body>
