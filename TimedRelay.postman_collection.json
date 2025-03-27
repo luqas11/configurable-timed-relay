@@ -21,7 +21,47 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-values",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-values"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"time\": 570,\n    \"duration\": 30\n}"
+				}
+			]
 		},
 		{
 			"name": "Set values",
@@ -48,7 +88,326 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-values?time=510&duration=45",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-values"
+							],
+							"query": [
+								{
+									"key": "time",
+									"value": "510"
+								},
+								{
+									"key": "duration",
+									"value": "45"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": ""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Invalid time value",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-values?time=999999&duration=45",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-values"
+							],
+							"query": [
+								{
+									"key": "time",
+									"value": "999999"
+								},
+								{
+									"key": "duration",
+									"value": "45"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_01\",\n    \"error_message\": \"Invalid time value\"\n}"
+				},
+				{
+					"name": "Invalid duration value",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-values?time=510&duration=450000",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-values"
+							],
+							"query": [
+								{
+									"key": "time",
+									"value": "510"
+								},
+								{
+									"key": "duration",
+									"value": "450000"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "64"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_02\",\n    \"error_message\": \"Invalid duration value\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get current hour",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/get-current-hour",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"get-current-hour"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-current-hour",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-current-hour"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"currentHour\": \"1035\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Not found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/not-found",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"not-found"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/not-found",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"not-found"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_00\",\n    \"error_message\": \"URL not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/not-found",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"not-found"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/html"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5656"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "    \n<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n        <title>Riego automático</title>\n        <style>\n            body {\n              font-family: Arial, sans-serif;\n              text-align: center;\n              background: #111;\n              padding: 20px;\n            }\n            .container {\n              background: #333;\n              padding: 20px;\n              border-radius: 8px;\n              max-width: 400px;\n              margin: auto;\n            }\n            input,\n            button {\n              padding: 10px;\n              margin: 10px;\n              font-size: 16px;\n              width: 80%;\n            }\n            button {\n              background: #116;\n              border: none;\n              border-radius: 5px;\n              cursor: pointer;\n            }\n            button:hover {\n              background: #118;\n            }\n            input {\n              background: lightgray;\n            }\n            p,\n            span,\n            button,\n            h1,\n            h3,\n            title,\n            label {\n              color: lightgray;\n            }\n          </style>\n    </head>\n    <body>\n        <div class=\"container\">\n            <h1>Riego automático</h1>\n            <p>\n              Configuración de horario y duración (en segundos) del riego automático.\n              La duración máxima permitida es de 600 segundos.\n            </p>\n            <form onsubmit=\"setValues(event)\">\n                <label>Hora de riego:</label>\n                <input type=\"time\" id=\"time\" required />\n                <br />\n                <label>Duración:</label>\n                <input type=\"number\" id=\"duration\" min=\"1\" max=\"600\" required />\n                <br />\n                <button type=\"submit\">Guardar</button>\n            </form>\n            <h3>Configuración actual</h3>\n            <p>\n                <b>Hora de riego:</b>\n                <span id=\"savedTime\">-</span>\n            </p>\n            <p>\n                <b>Duración:</b>\n                <span id=\"savedDuration\">-</span>\n            </p>\n            <p>\n                <b>Hora del sistema:</b>\n                <span id=\"currentHour\">-</span>\n            </p>\n        </div>\n        <script>\n            function setValues(event) {\n              event.preventDefault();\n\n              const duration = document.getElementById(\"duration\").value;\n              let time = document.getElementById(\"time\").value;\n              const [hours, minutes] = time.split(\":\").map(Number);\n              time = hours * 60 + minutes;\n\n              fetch(\"/set-values?time=\" + time + \"&duration=\" + duration)\n                .then((response) => {\n                  if (!response.ok) {\n                    const errorCode = response.json().code;\n                    let errorMessage = \"No fue posible guardar los valores indicados\";\n                    if (errorCode == \"ERR_01\") {\n                      errorMessage = \"La hora indicada es inválido\";\n                    }\n                    if (errorCode == \"ERR_02\") {\n                      errorMessage = \"La duración indicada es inválida\";\n                    }\n                    throw new Error(errorMessage);\n                  } else {\n                    getValues();\n                  }\n                })\n                .catch((error) => {\n                  alert(error.message);\n                });\n            }\n\n            function getValues(setInputs) {\n              fetch(\"/get-values\")\n                .then((response) => {\n                  if (!response.ok) {\n                    throw new Error(\"No fue posible obtener los valores actuales\");\n                  } else {\n                    return response.json();\n                  }\n                })\n                .then((data) => {\n                  const hours = Math.floor(data.time / 60);\n                  const minutes = data.time % 60;\n                  const time =\n                    String(hours).padStart(2, \"0\") +\n                    \":\" +\n                    String(minutes).padStart(2, \"0\");\n\n                  document.getElementById(\"savedTime\").innerText = time ?? \"-\";\n                  document.getElementById(\"savedDuration\").innerText =\n                    data.duration ?? \"-\";\n                  if (setInputs) {\n                    document.getElementById(\"time\").value = time ?? \"00:00\";\n                    document.getElementById(\"duration\").value = data.duration ?? 1;\n                  }\n                })\n                .catch((error) => {\n                  alert(error.message);\n                });\n            }\n\n            function getCurrentHour() {\n              fetch(\"/get-current-hour\")\n                .then((response) => {\n                  if (!response.ok) {\n                    throw new Error(\"No fue posible obtener la hora del sistema\");\n                  } else {\n                    return response.json();\n                  }\n                })\n                .then((data) => {\n                  const hours = Math.floor(data.currentHour / 60);\n                  const minutes = data.currentHour % 60;\n                  const time =\n                    String(hours).padStart(2, \"0\") +\n                    \":\" +\n                    String(minutes).padStart(2, \"0\");\n\n                  document.getElementById(\"currentHour\").innerText = time ?? \"00:00\";\n                })\n                .catch((error) => {\n                  console.log(error.message);\n                });\n            }\n\n            setInterval(getCurrentHour, 1000);\n            window.onload = () => getValues(true);\n          </script>\n    </body>\n</html>"
+				}
+			]
 		}
 	]
 }
