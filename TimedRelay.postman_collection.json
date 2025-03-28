@@ -60,6 +60,45 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"time\": 570,\n    \"duration\": 30\n}"
+				},
+				{
+					"name": "Error getting values",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-values",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-values"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "74"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_04\",\n    \"error_message\": \"Cannot get the configured values\"\n}"
 				}
 			]
 		},
@@ -292,6 +331,45 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"currentHour\": \"1035\"\n}"
+				},
+				{
+					"name": "System hour not set",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-current-hour",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-current-hour"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "68"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_03\",\n    \"error_message\": \"The system hour is not set\"\n}"
 				}
 			]
 		},
@@ -358,12 +436,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{BASE_URL}}/not-found",
+					"raw": "{{BASE_URL}}/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"not-found"
+						""
 					]
 				}
 			},
