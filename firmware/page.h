@@ -5,7 +5,7 @@
 
 // Page to manage and see the system configuration
 const String HTML = R"rawliteral(
-    <!DOCTYPE html>
+  <!DOCTYPE html>
       <html>
         <head>
           <meta charset="UTF-8" />
@@ -41,6 +41,9 @@ const String HTML = R"rawliteral(
             button:hover {
               background: #118;
             }
+            button:disabled {
+              background: #77a;
+            }
             input {
               background: lightgray;
             }
@@ -67,7 +70,7 @@ const String HTML = R"rawliteral(
               <input type="time" id="time" required /><br />
               <label>Duración:</label>
               <input type="number" id="duration" min="1" max="600" required /><br />
-              <button type="submit">Guardar</button>
+              <button type="submit" id="save">Guardar</button>
             </form>
             <h3>Configuración actual</h3>
             <p><b>Hora de riego:</b> <span id="savedTime">-</span></p>
@@ -81,6 +84,7 @@ const String HTML = R"rawliteral(
           <script>
             function setValues(event) {
               event.preventDefault();
+              document.getElementById("save").disabled = true;
 
               const duration = document.getElementById("duration").value;
               let time = document.getElementById("time").value;
@@ -90,21 +94,16 @@ const String HTML = R"rawliteral(
               fetch("/set-values?time=" + time + "&duration=" + duration)
                 .then((response) => {
                   if (!response.ok) {
-                    const errorCode = response.json().code;
-                    let errorMessage = "No fue posible guardar los valores indicados";
-                    if (errorCode == "ERR_01") {
-                      errorMessage = "La hora indicada es inválido";
-                    }
-                    if (errorCode == "ERR_02") {
-                      errorMessage = "La duración indicada es inválida";
-                    }
-                    throw new Error(errorMessage);
+                    throw new Error();
                   } else {
                     getValues();
                   }
                 })
                 .catch((error) => {
-                  alert(error.message);
+                  alert("No fue posible guardar los valores indicados");
+                })
+                .finally(() => {
+                  document.getElementById("save").disabled = false;
                 });
             }
 
@@ -134,7 +133,7 @@ const String HTML = R"rawliteral(
                   }
                 })
                 .catch((error) => {
-                  alert(error.message);
+                  console.error(error.message);
                 });
             }
 
@@ -158,7 +157,7 @@ const String HTML = R"rawliteral(
                   document.getElementById("currentHour").innerText = time ?? "00:00";
                 })
                 .catch((error) => {
-                  console.log(error.message);
+                  console.error(error.message);
                 });
             }
 
