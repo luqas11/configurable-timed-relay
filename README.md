@@ -6,7 +6,7 @@ This project is the firmware, circuit, and case design for a **system to power A
 
 ### Screenshots
 #### Webpage:
-<img src="screenshot1.png" height="30%" width="30%">
+<img src="screenshot1.png" height="50%" width="50%">
 
 #### Circuit schematic:
 <img src="screenshot2.png">
