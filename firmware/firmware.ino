@@ -50,7 +50,7 @@ void setup() {
   // Initialize the serial communication, the EEPROM library, the WiFi connection and the Time library
   Serial.begin(9600);
   beginEEPROM();
-  connectToWifi(SSID, PASSWORD, STATUS_LED);
+  connectToWifi(SSID, PASSWORD, SSID_AP, PASSWORD_AP, STATUS_LED);
   beginTime();
 
   // Read and validate the configured values from the EEPROM

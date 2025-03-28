@@ -3,8 +3,8 @@
 
 #include "Arduino.h"
 
-// Attempts to connect the system to a WiFi network with the given credentials. Retries indefinitely until a connection is successfully established. Blinks a given LED while trying, and turns it on if success.
-void connectToWifi(String ssid, String password, int ledPin);
+// Attempts to connect the system to a WiFi network with the given credentials and initializes the access point network. Retries indefinitely until a connection is successfully established. Blinks a given LED while trying, and turns it on if success.
+void connectToWifi(String ssid, String password, String ssidAP, String passwordAP, int ledPin);
 
 // Checks if the WiFi connection is established and returns a boolean indicating it.
 bool isWiFiConnected();

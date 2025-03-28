@@ -16,11 +16,12 @@ bool isWiFiConnected() {
   return WiFi.status() == WL_CONNECTED;
 }
 
-void connectToWifi(String ssid, String password, int ledPin) {
+void connectToWifi(String ssid, String password, String ssidAP, String passwordAP, int ledPin) {
   Serial.print("Connecting to ");
   Serial.println(String(ssid));
-  WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_AP_STA);
   WiFi.begin(ssid, password);
+  WiFi.softAP(ssidAP, passwordAP);
 
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(ledPin, LOW);

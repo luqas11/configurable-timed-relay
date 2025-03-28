@@ -5,5 +5,9 @@
 #define SSID "ssid"
 // Password of the WiFi network
 #define PASSWORD "password"
+// Password of the AP network
+#define SSID_AP "ssid_ap"
+// Password of the AP network
+#define PASSWORD_AP "password_ap"
 
 #endif
