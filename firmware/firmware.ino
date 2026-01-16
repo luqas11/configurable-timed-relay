@@ -234,6 +234,7 @@ void handleGetWiFiStatus() {
   StaticJsonDocument<128> doc;
 
   doc["status"] = WiFi.status();
+  doc["ip"] = WiFi.localIP().isSet() ? WiFi.localIP().toString() : "";
   serializeJson(doc, response);
 
   server.send(200, "application/json", response);

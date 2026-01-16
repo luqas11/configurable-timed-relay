@@ -77,6 +77,10 @@ const String ADMIN_HTML = R"rawliteral(
         <b>Estado de conexión:</b>
         <span id="connectionStatus">-</span>
       </p>
+      <p>
+        <b>Dirección IP:</b>
+        <span id="ipAddress">-</span>
+      </p>
     </div>
 
     <script>
@@ -113,7 +117,7 @@ const String ADMIN_HTML = R"rawliteral(
             }
           })
           .then((data) => {
-            document.getElementById("savedSSID").innerText = data.ssid ?? "-";
+            document.getElementById("savedSSID").innerText = data.ssid || "-";
             if (setInputs) {
               document.getElementById("ssid").value = data.ssid ?? "";
             }
@@ -149,6 +153,7 @@ const String ADMIN_HTML = R"rawliteral(
             const statusCode = data.status;
             const statusText = getStatusText(statusCode);
             document.getElementById("connectionStatus").innerText = statusText;
+            document.getElementById("ipAddress").innerText = data.ip || "-";
           })
           .catch((error) => {
             console.error(error.message);
