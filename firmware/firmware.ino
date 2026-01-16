@@ -1,17 +1,21 @@
 #include <ESP8266WebServer.h>
+#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include "EEPROMUtils.h"
 #include "WiFiUtils.h"
+#include "TimeUtils.h"
 #include "config.h"
-#include "page.h"
+#include "AdminPage.h"
+#include "IndexPage.h"
 
 /*
-   Version 1.0.0
-   27-3-2025
+   Version 1.1.0
+   16-1-2026
 
    External libraries:
-   ArduinoJson@7.3.1
+   ArduinoJson@7.4.2
    esp8266@3.1.2
+   Time@1.6.1
 */
 
 // Duration of the status LED blinks
@@ -50,7 +54,7 @@ void setup() {
   // Initialize the serial communication, the EEPROM library, the WiFi connection and the Time library
   Serial.begin(9600);
   beginEEPROM();
-  connectToWifi(SSID, PASSWORD, SSID_AP, PASSWORD_AP, STATUS_LED);
+  beginWiFi(SSID_AP, PASSWORD_AP, STATUS_LED);
   beginTime();
 
   // Read and validate the configured values from the EEPROM
@@ -65,9 +69,13 @@ void setup() {
 
   // Set up all the server endpoints
   server.on("/", handleRoot);
+  server.on("/admin", handleAdmin);
   server.on("/set-values", handleSetValues);
   server.on("/get-values", handleGetValues);
   server.on("/get-current-hour", handleGetCurrentHour);
+  server.on("/get-wifi-config", handleGetWiFiConfig);
+  server.on("/set-wifi-config", handleSetWiFiConfig);
+  server.on("/get-wifi-status", handleGetWiFiStatus);
   server.onNotFound(handleNotFound);
 
   // Initialize the HTTP server
@@ -83,7 +91,7 @@ void loop() {
     digitalWrite(STATUS_LED, isWiFiConnected() ? LOW : HIGH);
   }
 
-  // Turn on the status LED if the blink is finished
+  // Turn off the status LED if the blink is finished
   if ((millis() - lastLedTimestamp) > LED_BLINK_TIME && isLedBlinking == true) {
     digitalWrite(STATUS_LED, LOW);
     isLedBlinking = false;
@@ -183,6 +191,55 @@ void handleGetCurrentHour() {
   blinkStatusLed();
 }
 
+// Sets the WiFi configuration
+void handleSetWiFiConfig() {
+  String ssid = server.arg("ssid");
+  String password = server.arg("password");
+
+  if (ssid == "" || ssid.length() > 32) {
+    String response = formatError("ERR_05", "Invalid WiFi SSID");
+    server.send(400, "application/json", response);
+    blinkStatusLed();
+    return;
+  }
+
+  if (password == "" || password.length() < 8 || password.length() > 64) {
+    String response = formatError("ERR_06", "Invalid WiFi password");
+    server.send(400, "application/json", response);
+    blinkStatusLed();
+    return;
+  }
+
+  WiFi.begin(ssid, password);
+
+  server.send(200);
+  blinkStatusLed();
+}
+
+// Gets the WiFi configuration
+void handleGetWiFiConfig() {
+  String response;
+  StaticJsonDocument<128> doc;
+
+  doc["ssid"] = WiFi.SSID();
+  serializeJson(doc, response);
+
+  server.send(200, "application/json", response);
+  blinkStatusLed();
+}
+
+// Gets the current WiFi status
+void handleGetWiFiStatus() {
+  String response;
+  StaticJsonDocument<128> doc;
+
+  doc["status"] = WiFi.status();
+  serializeJson(doc, response);
+
+  server.send(200, "application/json", response);
+  blinkStatusLed();
+}
+
 // Returns a not found message to the client, formatted as a JSON string
 void handleNotFound() {
   String response = formatError("ERR_00", "URL not found");
@@ -190,9 +247,15 @@ void handleNotFound() {
   blinkStatusLed();
 }
 
-// Returns the HTML page to the client, to manage and see the system configuration
+// Returns an HTML page to the client, to manage and see the system configuration
 void handleRoot() {
-  server.send(200, "text/html", HTML);
+  server.send(200, "text/html", INDEX_HTML);
+  blinkStatusLed();
+}
+
+// Returns an HTML page to the client, to manage and see the WiFi configuration
+void handleAdmin() {
+  server.send(200, "text/html", ADMIN_HTML);
   blinkStatusLed();
 }
 

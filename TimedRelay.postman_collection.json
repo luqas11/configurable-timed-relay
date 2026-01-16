@@ -278,6 +278,244 @@
 			]
 		},
 		{
+			"name": "Get WiFi config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/get-wifi-config",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"get-wifi-config"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-wifi-config",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-wifi-config"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "22"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"ssid\": \"mynetwork\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Set WiFi config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/set-wifi-config?ssid=myssid&password=mypassword",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"set-wifi-config"
+					],
+					"query": [
+						{
+							"key": "ssid",
+							"value": "myssid"
+						},
+						{
+							"key": "password",
+							"value": "mypassword"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-wifi-config?ssid=myssid&password=mypassword",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-wifi-config"
+							],
+							"query": [
+								{
+									"key": "ssid",
+									"value": "myssid"
+								},
+								{
+									"key": "password",
+									"value": "mypassword"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": ""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Invalid password",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-wifi-config?ssid=myssid&password=invalid",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-wifi-config"
+							],
+							"query": [
+								{
+									"key": "ssid",
+									"value": "myssid"
+								},
+								{
+									"key": "password",
+									"value": "invalid"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "74"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_06\",\n    \"error_message\": \"Invalid or missing WiFi password\"\n}"
+				},
+				{
+					"name": "Invalid SSID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/set-wifi-config?ssid=invalid_invalid_invalid_invalid_invalid&password=mypassword",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"set-wifi-config"
+							],
+							"query": [
+								{
+									"key": "ssid",
+									"value": "invalid_invalid_invalid_invalid_invalid"
+								},
+								{
+									"key": "password",
+									"value": "mypassword"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "70"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": \"ERR_05\",\n    \"error_message\": \"Invalid or missing WiFi SSID\"\n}"
+				}
+			]
+		},
+		{
 			"name": "Get current hour",
 			"request": {
 				"method": "GET",
@@ -370,6 +608,63 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"error_code\": \"ERR_03\",\n    \"error_message\": \"The system hour is not set\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get WiFi status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/get-wifi-status",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"get-wifi-status"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/get-wifi-status",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-wifi-status"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "12"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=2000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": 3\n}"
 				}
 			]
 		},

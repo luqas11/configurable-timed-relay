@@ -155,7 +155,10 @@
       }
 
       setInterval(getCurrentHour, 1000);
-      window.onload = () => getValues(true);
+      window.onload = () => {
+        getValues(true);
+        getCurrentHour();
+      };
     </script>
   </body>
 </html>
