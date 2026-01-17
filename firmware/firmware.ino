@@ -214,6 +214,11 @@ void handleSetWiFiConfig() {
 
   server.send(200);
   blinkStatusLed();
+
+  connectToWiFi(STATUS_LED);
+  if (isWiFiConnected()) {
+    forceTimeSync();
+  }
 }
 
 // Gets the WiFi configuration

@@ -52,6 +52,10 @@ void beginTime() {
   setSyncInterval(300);
 }
 
+void forceTimeSync() {
+  setSyncProvider(getNtpTime);
+}
+
 bool isTimeSet() {
   return timeStatus() != timeNotSet;
 }

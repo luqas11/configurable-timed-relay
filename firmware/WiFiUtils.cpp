@@ -8,12 +8,15 @@ bool isWiFiConnected() {
 }
 
 void beginWiFi(String ssidAP, String passwordAP, int ledPin) {
-  Serial.print("Connecting to WiFi");
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin();
   WiFi.softAP(ssidAP, passwordAP);
   WiFi.persistent(true);
+  connectToWiFi(ledPin);
+}
 
+void connectToWiFi(int ledPin) {
+  Serial.print("Connecting to WiFi");
   for (int i = 0; i < MAX_AWAIT_TIME * 2; i++) {
     if (isWiFiConnected()) {
       break;

@@ -6,6 +6,9 @@
 // Initializes the Time library.
 void beginTime();
 
+// Forces a fetch to the time data source.
+void forceTimeSync();
+
 // Checks if the system hour is set and returns a boolean indicating it.
 bool isTimeSet();
 
