@@ -89,6 +89,8 @@
             if (!response.ok) {
               throw new Error();
             } else {
+              document.getElementById("savedTime").innerText = "-";
+              document.getElementById("savedDuration").innerText = "-";
               getValues();
             }
           })

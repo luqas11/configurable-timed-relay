@@ -1,7 +1,7 @@
 #include "WiFiUtils.h"
 #include <ESP8266WiFi.h>
 
-const int MAX_AWAIT_TIME = 10;
+const int MAX_AWAIT_TIME = 15;
 
 bool isWiFiConnected() {
   return WiFi.status() == WL_CONNECTED;
@@ -16,16 +16,16 @@ void beginWiFi(String ssidAP, String passwordAP, int ledPin) {
 }
 
 void connectToWiFi(int ledPin) {
-  Serial.print("Connecting to WiFi");
-  for (int i = 0; i < MAX_AWAIT_TIME * 2; i++) {
+  Serial.println("Connecting to WiFi");
+  for (int i = 0; i < MAX_AWAIT_TIME; i++) {
     if (isWiFiConnected()) {
       break;
     }
     digitalWrite(ledPin, LOW);
-    delay(250);
+    delay(500);
     Serial.print(".");
     digitalWrite(ledPin, HIGH);
-    delay(250);
+    delay(500);
   }
   Serial.println();
 

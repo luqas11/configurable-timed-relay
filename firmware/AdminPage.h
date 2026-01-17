@@ -96,6 +96,9 @@ const String ADMIN_HTML = R"rawliteral(
             if (!response.ok) {
               throw new Error();
             } else {
+              document.getElementById("savedSSID").innerText = "-";
+              document.getElementById("connectionStatus").innerText = "Conectando";
+              document.getElementById("ipAddress").innerText = "-";
               getValues();
             }
           })

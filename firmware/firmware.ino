@@ -10,7 +10,7 @@
 
 /*
    Version 1.1.0
-   16-1-2026
+   17-1-2026
 
    External libraries:
    ArduinoJson@7.4.2
@@ -19,7 +19,7 @@
 */
 
 // Duration of the status LED blinks
-const int LED_BLINK_TIME = 200;
+const int LED_BLINK_TIME = 100;
 
 // Outputs pin numbers
 int STATUS_LED = 12;
@@ -98,7 +98,7 @@ void loop() {
   }
 
   // Check if the current minute is the confgured one
-  if ((getCurrentHour() == currentTime / 60) && (getCurrentMinute() == currentTime % 60)) {
+  if (isTimeSet() && (getCurrentHour() == currentTime / 60) && (getCurrentMinute() == currentTime % 60)) {
     // If the output hasn't been turned on yet, do it and update the state variables
     if (!hasAlreadyRun) {
       turnOffTimestamp = millis() + currentDuration * 1000;
@@ -126,7 +126,7 @@ void handleSetValues() {
   char *endTime;
   long newTime = strtol(time.c_str(), &endTime, 10);
 
-  if (time == "" || *endTime != '\0' || newTime >= MAX_TIME || newTime <= 0) {
+  if (time == "" || *endTime != '\0' || newTime >= MAX_TIME || newTime < 0) {
     String response = formatError("ERR_01", "Invalid time value");
     server.send(400, "application/json", response);
     blinkStatusLed();
